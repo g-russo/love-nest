@@ -1,26 +1,342 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary - Romantic Pinks & Reds */
+  --rose-50: #fff1f2;
+  --rose-100: #ffe4e6;
+  --rose-200: #fecdd3;
+  --rose-300: #fda4af;
+  --rose-400: #fb7185;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+
+  /* Accent - Warm Purples */
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+
+  /* Neutrals */
+  --cream: #fef7f0;
+  --cream-dark: #fbeee5;
+  --dark: #1a1a2e;
+  --dark-light: #2d2d44;
+
+  /* Gradients */
+  --gradient-romantic: linear-gradient(135deg, #f43f5e 0%, #a855f7 100%);
+  --gradient-warm: linear-gradient(135deg, #fda4af 0%, #fecdd3 100%);
+  --gradient-soft: linear-gradient(135deg, #fff1f2 0%, #fce7f3 50%, #ede9fe 100%);
+
+  /* Shadows */
+  --shadow-soft: 0 4px 20px rgba(244, 63, 94, 0.1);
+  --shadow-medium: 0 8px 30px rgba(244, 63, 94, 0.15);
+  --shadow-strong: 0 20px 60px rgba(244, 63, 94, 0.2);
+
+  /* Theme */
+  --background: var(--cream);
+  --foreground: var(--dark);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-rose-50: var(--rose-50);
+  --color-rose-100: var(--rose-100);
+  --color-rose-200: var(--rose-200);
+  --color-rose-300: var(--rose-300);
+  --color-rose-400: var(--rose-400);
+  --color-rose-500: var(--rose-500);
+  --color-rose-600: var(--rose-600);
+  --color-rose-700: var(--rose-700);
+  --color-purple-400: var(--purple-400);
+  --color-purple-500: var(--purple-500);
+  --color-purple-600: var(--purple-600);
+  --color-cream: var(--cream);
+  --color-dark: var(--dark);
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
+  background: var(--gradient-soft);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+/* Romantic Typography */
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-sans {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Gradient Text */
+.text-gradient {
+  background: var(--gradient-romantic);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-dark {
+  background: rgba(26, 26, 46, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: var(--gradient-romantic);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(244, 63, 94, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(244, 63, 94, 0.4);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--rose-600);
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-soft);
+  border: 2px solid var(--rose-200);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: var(--rose-400);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Card Styles */
+.card {
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+/* Polaroid Style */
+.polaroid {
+  background: white;
+  padding: 0.75rem;
+  padding-bottom: 3rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: rotate(-2deg);
+  transition: all 0.3s ease;
+}
+
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.polaroid:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.polaroid:nth-child(even):hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+/* VHS Style */
+.vhs-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.vhs-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.03) 0px,
+      rgba(0, 0, 0, 0.03) 1px,
+      transparent 1px,
+      transparent 2px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vhs-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(255, 0, 0, 0.02) 0%,
+      rgba(0, 255, 0, 0.02) 33%,
+      rgba(0, 0, 255, 0.02) 66%,
+      rgba(255, 0, 0, 0.02) 100%);
+  animation: vhs-glitch 0.3s infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes vhs-glitch {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Floating Hearts Animation */
+.floating-hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.heart {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.3;
+  animation: float-up 15s infinite linear;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.3;
+  }
+
+  90% {
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Input Styles */
+.input-romantic {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  padding-left: 3.5rem;
+  /* Default left padding for icon inputs */
+  border: 2px solid var(--rose-200);
+  border-radius: 1rem;
+  background: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.input-romantic:focus {
+  border-color: var(--rose-400);
+  box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.1);
+}
+
+.input-romantic::placeholder {
+  color: var(--rose-300);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--rose-50);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--rose-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rose-400);
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--rose-200);
+  border-top-color: var(--rose-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Page Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.4s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+  }
 }
