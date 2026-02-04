@@ -72,6 +72,10 @@ class ApiClient {
 
     // File upload method
     async uploadFile<T>(endpoint: string, formData: FormData): Promise<T> {
+        return this.uploadFileWithMethod(endpoint, 'POST', formData);
+    }
+
+    async uploadFileWithMethod<T>(endpoint: string, method: string, formData: FormData): Promise<T> {
         const headers: Record<string, string> = {};
         const token = getToken();
         if (token) {
@@ -79,7 +83,7 @@ class ApiClient {
         }
 
         const response = await fetch(`${this.baseUrl}${endpoint}`, {
-            method: 'POST',
+            method: method,
             body: formData,
             credentials: 'include',
             headers,
@@ -194,11 +198,21 @@ class ApiClient {
         return this.request('/wishlist/partner');
     }
 
-    async addWishlistItem(data: { title: string; description?: string; link?: string; imageUrl?: string; priority?: string }) {
+    async addWishlistItem(data: FormData | { title: string; description?: string; link?: string; imageUrl?: string; priority?: string }) {
+        if (data instanceof FormData) {
+            return this.uploadFile('/wishlist', data);
+        }
         return this.request('/wishlist', { method: 'POST', body: data });
     }
 
-    async updateWishlistItem(id: string, data: any) {
+    async updateWishlistItem(id: string, data: FormData | any) {
+        if (data instanceof FormData) {
+            // Note: PUT with generic uploadFile logic (which uses POST) needs valid method
+            // Standard fetch doesn't support multipart on PUT easily universally but standard browsers do
+            // Our uploadFile helper forces POST. We might need a separate helper or manual fetch here.
+            // Let's create a custom PUT upload request here or modify uploadFile.
+            return this.uploadFileWithMethod(`/wishlist/${id}`, 'PUT', data);
+        }
         return this.request(`/wishlist/${id}`, { method: 'PUT', body: data });
     }
 

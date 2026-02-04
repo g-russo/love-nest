@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, Button, Modal, EmptyState, LoadingSpinner } from '@/components/ui';
-import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, Bell, Trash2, Edit2, X, Heart, Cake, PartyPopper, Star } from 'lucide-react';
+import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, Bell, Trash2, Edit2, X, Heart, Cake, PartyPopper, Star, CalendarDays } from 'lucide-react';
 import { api } from '@/lib/api';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -84,7 +84,9 @@ export default function CalendarPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-gray-800">Calendar</h1>
+                    <h1 className="font-serif text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <CalendarDays className="w-8 h-8 text-rose-500" />
+                        Calendar</h1>
                     <p className="text-gray-500">Plan your dates and special moments</p>
                 </div>
                 <Button onClick={() => {

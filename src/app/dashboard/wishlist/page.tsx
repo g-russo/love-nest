@@ -158,6 +158,7 @@ export default function WishlistPage() {
                 <div>
                     <h1 className="font-serif text-3xl font-bold text-gray-800 flex items-center gap-3">
                         <Gift className="w-8 h-8 text-rose-500" />
+                        Wishlist
                     </h1>
                     <p className="text-gray-500">Share what would make you happy</p>
                 </div>
@@ -243,6 +244,7 @@ export default function WishlistPage() {
     );
 }
 
+
 function WishlistModal({ isOpen, onClose, onSuccess, item }: {
     isOpen: boolean;
     onClose: () => void;
@@ -256,6 +258,7 @@ function WishlistModal({ isOpen, onClose, onSuccess, item }: {
         imageUrl: '',
         priority: 'medium' as 'low' | 'medium' | 'high',
     });
+    const [file, setFile] = useState<File | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -276,6 +279,7 @@ function WishlistModal({ isOpen, onClose, onSuccess, item }: {
                 priority: 'medium',
             });
         }
+        setFile(null); // Reset file
     }, [item]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -283,11 +287,24 @@ function WishlistModal({ isOpen, onClose, onSuccess, item }: {
         setSubmitting(true);
 
         try {
+            const data = new FormData();
+            data.append('title', formData.title);
+            data.append('description', formData.description);
+            data.append('link', formData.link);
+            data.append('priority', formData.priority);
+            // If user provided a URL manually (and no file), use that
+            if (formData.imageUrl && !file) {
+                data.append('imageUrl', formData.imageUrl);
+            }
+            if (file) {
+                data.append('image', file);
+            }
+
             if (item) {
-                await api.updateWishlistItem(item._id, formData);
+                await api.updateWishlistItem(item._id, data);
                 toast.success('Item updated!');
             } else {
-                await api.addWishlistItem(formData);
+                await api.addWishlistItem(data);
                 toast.success('Added to wishlist! 🎁');
             }
             onSuccess();
@@ -336,14 +353,29 @@ function WishlistModal({ isOpen, onClose, onSuccess, item }: {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                    <input
-                        type="url"
-                        value={formData.imageUrl}
-                        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                        placeholder="https://..."
-                        className="input-romantic"
-                    />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Image (Upload or URL)</label>
+                    <div className="space-y-2">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setFile(e.target.files?.[0] || null)}
+                            className="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-rose-50 file:text-rose-700
+                                hover:file:bg-rose-100"
+                        />
+                        <div className="text-center text-xs text-gray-400">- OR -</div>
+                        <input
+                            type="url"
+                            value={formData.imageUrl}
+                            onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                            placeholder="Paste image URL directly..."
+                            className="input-romantic"
+                            disabled={!!file}
+                        />
+                    </div>
                 </div>
 
                 <div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, Button, Modal, EmptyState, LoadingSpinner } from '@/components/ui';
-import { ListChecks, Plus, Check, Trash2, Edit2, Star, Users, User } from 'lucide-react';
+import { ListChecks, Plus, Check, Trash2, Edit2, Star, Users, User, ScrollText } from 'lucide-react';
 import { api } from '@/lib/api';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -82,7 +82,9 @@ export default function BucketlistPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-gray-800">Bucket List ✨</h1>
+                    <h1 className="font-serif text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <ScrollText className="w-8 h-8 text-rose-500" />
+                        Bucket List </h1>
                     <p className="text-gray-500">Dreams to achieve together</p>
                 </div>
                 <Button onClick={() => {
@@ -144,8 +146,8 @@ export default function BucketlistPage() {
                         key={value}
                         onClick={() => setFilter(value as any)}
                         className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === value
-                                ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
-                                : 'bg-white text-gray-600 hover:bg-rose-50'
+                            ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
+                            : 'bg-white text-gray-600 hover:bg-rose-50'
                             }`}
                     >
                         <Icon className="w-4 h-4" />
@@ -179,8 +181,8 @@ export default function BucketlistPage() {
                                 <button
                                     onClick={() => handleToggleComplete(item._id, item.isCompleted)}
                                     className={`flex-shrink-0 w-6 h-6 mt-0.5 rounded-full border-2 flex items-center justify-center transition-all ${item.isCompleted
-                                            ? 'bg-green-500 border-green-500 text-white'
-                                            : 'border-rose-300 hover:border-rose-500'
+                                        ? 'bg-green-500 border-green-500 text-white'
+                                        : 'border-rose-300 hover:border-rose-500'
                                         }`}
                                 >
                                     {item.isCompleted && <Check className="w-4 h-4" />}
