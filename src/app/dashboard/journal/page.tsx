@@ -12,7 +12,9 @@ interface JournalEntry {
     _id: string;
     title: string;
     content: string;
-    mood?: 'happy' | 'love' | 'neutral' | 'sad';
+    mood?: 'happy' | 'love' | 'neutral' | 'sad' | 'custom';
+    moodEmoji?: string;
+    moodScale?: number;
     date: string;
     authorId: {
         _id: string;
@@ -21,11 +23,12 @@ interface JournalEntry {
     };
 }
 
-const moodEmojis = {
+const moodEmojis: Record<string, { icon: any; label: string; color: string }> = {
     happy: { icon: Smile, label: 'Happy', color: 'text-yellow-500' },
     love: { icon: Heart, label: 'In Love', color: 'text-rose-500' },
     neutral: { icon: Meh, label: 'Neutral', color: 'text-gray-500' },
     sad: { icon: Frown, label: 'Sad', color: 'text-blue-500' },
+    custom: { icon: null, label: 'Custom', color: 'text-purple-500' },
 };
 
 export default function JournalPage() {
@@ -69,7 +72,10 @@ export default function JournalPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-gray-800">Our Journal 📖</h1>
+                    <h1 className="font-serif text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <BookHeart className="w-8 h-8 text-rose-500" />
+                        Our Journal
+                    </h1>
                     <p className="text-gray-500">Write your love story together</p>
                 </div>
                 <Button onClick={() => {
@@ -88,7 +94,7 @@ export default function JournalPage() {
                 </div>
             ) : entries.length === 0 ? (
                 <EmptyState
-                    icon="📝"
+                    icon={<BookHeart className="w-12 h-12 text-gray-400" />}
                     title="No entries yet"
                     description="Start writing your love story together!"
                     action={
@@ -101,7 +107,9 @@ export default function JournalPage() {
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {entries.map(entry => {
-                        const MoodIcon = entry.mood && moodEmojis[entry.mood] ? moodEmojis[entry.mood].icon : null;
+                        const style = entry.mood && moodEmojis[entry.mood];
+                        const icon = entry.mood === 'custom' ? entry.moodEmoji : style?.icon && React.createElement(style.icon, { className: 'w-5 h-5' });
+
                         return (
                             <Card
                                 key={entry._id}
@@ -118,9 +126,10 @@ export default function JournalPage() {
                                             <p className="text-xs text-gray-400">{format(new Date(entry.date), 'MMM d, yyyy')}</p>
                                         </div>
                                     </div>
-                                    {MoodIcon && (
-                                        <span className={moodEmojis[entry.mood!].color}>
-                                            <MoodIcon className="w-5 h-5" />
+                                    {style && (
+                                        <span className={`${style.color} flex items-center gap-1`}>
+                                            {typeof icon === 'string' ? <span className="text-xl">{icon}</span> : icon}
+                                            {entry.moodScale !== undefined && <span className="text-xs font-bold">{entry.moodScale}/10</span>}
                                         </span>
                                     )}
                                 </div>
@@ -152,8 +161,17 @@ export default function JournalPage() {
                             </div>
                             {selectedEntry.mood && moodEmojis[selectedEntry.mood] && (
                                 <div className={`flex items-center gap-1 ${moodEmojis[selectedEntry.mood].color}`}>
-                                    {React.createElement(moodEmojis[selectedEntry.mood].icon, { className: 'w-5 h-5' })}
-                                    <span className="text-sm">{moodEmojis[selectedEntry.mood].label}</span>
+                                    {selectedEntry.mood === 'custom' ? (
+                                        <span className="text-xl">{selectedEntry.moodEmoji}</span>
+                                    ) : (
+                                        React.createElement(moodEmojis[selectedEntry.mood].icon, { className: 'w-5 h-5' })
+                                    )}
+                                    <span className="text-sm">{selectedEntry.mood === 'custom' ? 'Custom' : moodEmojis[selectedEntry.mood].label}</span>
+                                    {selectedEntry.moodScale !== undefined && (
+                                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">
+                                            Scale: {selectedEntry.moodScale}/10
+                                        </span>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -216,7 +234,9 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
     const [formData, setFormData] = useState({
         title: '',
         content: '',
-        mood: '' as '' | 'happy' | 'love' | 'neutral' | 'sad',
+        mood: '' as '' | 'happy' | 'love' | 'neutral' | 'sad' | 'custom',
+        moodEmoji: '',
+        moodScale: 5,
         date: format(new Date(), 'yyyy-MM-dd'),
     });
     const [submitting, setSubmitting] = useState(false);
@@ -226,7 +246,9 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
             setFormData({
                 title: entry.title,
                 content: entry.content,
-                mood: entry.mood || '',
+                mood: (entry.mood as any) || '',
+                moodEmoji: entry.moodEmoji || '',
+                moodScale: entry.moodScale || 5,
                 date: format(new Date(entry.date), 'yyyy-MM-dd'),
             });
         } else {
@@ -234,6 +256,8 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
                 title: '',
                 content: '',
                 mood: '',
+                moodEmoji: '',
+                moodScale: 5,
                 date: format(new Date(), 'yyyy-MM-dd'),
             });
         }
@@ -248,6 +272,8 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
                 title: formData.title,
                 content: formData.content,
                 mood: formData.mood || undefined,
+                moodEmoji: formData.moodEmoji,
+                moodScale: formData.moodScale,
                 date: formData.date,
             };
 
@@ -256,7 +282,7 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
                 toast.success('Entry updated!');
             } else {
                 await api.createJournalEntry(data);
-                toast.success('Entry added! 📖');
+                toast.success('Entry added!');
             }
             onSuccess();
         } catch (error: any) {
@@ -267,7 +293,7 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={entry ? 'Edit Entry' : 'New Journal Entry 📖'} size="lg">
+        <Modal isOpen={isOpen} onClose={onClose} title={entry ? 'Edit Entry' : 'New Journal Entry'} size="lg">
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
@@ -306,6 +332,7 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
                             <option value="love">💕 In Love</option>
                             <option value="neutral">😐 Neutral</option>
                             <option value="sad">😢 Sad</option>
+                            <option value="custom">✨ Others</option>
                         </select>
                     </div>
                     <div>
@@ -316,6 +343,38 @@ function JournalModal({ isOpen, onClose, onSuccess, entry }: {
                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                             className="input-romantic"
                         />
+                    </div>
+                </div>
+
+                {formData.mood === 'custom' && (
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Custom Mood Emoji</label>
+                        <input
+                            type="text"
+                            value={formData.moodEmoji}
+                            onChange={(e) => setFormData({ ...formData, moodEmoji: e.target.value })}
+                            placeholder="e.g. 😴, 🤩, 😡"
+                            className="input-romantic"
+                            maxLength={2}
+                        />
+                    </div>
+                )}
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Mood Intensity (Scale: {formData.moodScale}/10)
+                    </label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="10"
+                        value={formData.moodScale}
+                        onChange={(e) => setFormData({ ...formData, moodScale: parseInt(e.target.value) })}
+                        className="w-full accent-rose-500"
+                    />
+                    <div className="flex justify-between text-xs text-gray-400 mt-1">
+                        <span>Low</span>
+                        <span>High</span>
                     </div>
                 </div>
 

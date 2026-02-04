@@ -18,6 +18,21 @@ export default function DashboardPage() {
         journalEntries: 0,
     });
 
+    const [quote, setQuote] = useState({ text: "The best thing to hold onto in life is each other.", author: "Audrey Hepburn" });
+
+    const quotes = [
+        { text: "The best thing to hold onto in life is each other.", author: "Audrey Hepburn" },
+        { text: "I look at you and see the rest of my life in front of my eyes.", author: "Unknown" },
+        { text: "You are my heart, my life, my one and only thought.", author: "Arthur Conan Doyle" },
+        { text: "I swear I couldn't love you more than I do right now, and yet I know I will tomorrow.", author: "Leo Christopher" },
+        { text: "If I know what love is, it is because of you.", author: "Hermann Hesse" },
+        { text: "You make me want to be a better man.", author: "Jack Nicholson" },
+        { text: "I love you not only for what you are, but for what I am when I am with you.", author: "Elizabeth Barrett Browning" },
+        { text: "My soul and your soul are forever tangled.", author: "N.R. Hart" },
+        { text: "I am who I am because of you. You are every reason, every hope, and every dream I've ever had.", author: "Nicholas Sparks" },
+        { text: "You are the finest, loveliest, tenderest, and most beautiful person I have ever known and even that is an understatement.", author: "F. Scott Fitzgerald" }
+    ];
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -41,6 +56,9 @@ export default function DashboardPage() {
         if (partner) {
             fetchData();
         }
+
+        // Set random quote
+        setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
     }, [partner]);
 
     const quickLinks = [
@@ -170,12 +188,12 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Romantic Note */}
-                    <Card className="p-6 bg-gradient-to-r from-rose-50 to-purple-50 border-none">
+                    <Card className="p-6 bg-gradient-to-r from-rose-50 to-purple-50 border-none transition-all duration-500 hover:shadow-md">
                         <div className="text-center">
                             <p className="font-serif text-lg text-gray-700 italic">
-                                "The best thing to hold onto in life is each other."
+                                "{quote.text}"
                             </p>
-                            <p className="text-sm text-gray-500 mt-2">— Audrey Hepburn</p>
+                            <p className="text-sm text-gray-500 mt-2">— {quote.author}</p>
                         </div>
                     </Card>
                 </>

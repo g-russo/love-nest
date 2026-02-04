@@ -17,7 +17,8 @@ import {
     Menu,
     X,
     Mail,
-    UserPlus
+    UserPlus,
+    Gamepad2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
@@ -29,6 +30,7 @@ const navItems = [
     { href: '/dashboard/wishlist', icon: Gift, label: 'Wishlist' },
     { href: '/dashboard/bucketlist', icon: ListChecks, label: 'Bucket List' },
     { href: '/dashboard/journal', icon: BookHeart, label: 'Journal' },
+    { href: '/dashboard/games', icon: Gamepad2, label: 'Games' },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -65,13 +67,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             const response: any = await api.sendInvite(inviteEmail);
 
             if (response.emailSent) {
-                toast.success('Invitation sent! 💌');
+                toast.success('Invitation sent!');
                 setInviteModalOpen(false);
                 setInviteEmail('');
             } else {
                 // Email failed but we have the link
                 setInviteLink(response.inviteUrl);
-                toast.success('Invite link created! Share it with your partner 💕');
+                toast.success('Invite link created! Share it with your partner');
             }
         } catch (error: any) {
             toast.error(error.message || 'Failed to send invitation');
@@ -141,7 +143,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 <p className="font-medium text-gray-800 truncate">
                                     {partner.nickname || partner.displayName}
                                 </p>
-                                <p className="text-xs text-rose-500">Your Partner 💕</p>
+                                <p className="text-xs text-rose-500 flex items-center gap-1">
+                                    <Heart className="w-3 h-3" /> Your Partner
+                                </p>
                             </div>
                         </div>
                     ) : (
@@ -153,7 +157,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 <UserPlus className="w-8 h-8 text-rose-400" />
                                 <div>
                                     <p className="font-medium text-gray-800">Invite Partner</p>
-                                    <p className="text-xs text-rose-500">Send a love invite 💌</p>
+                                    <p className="text-xs text-rose-500 text-left">Send a love invite</p>
                                 </div>
                             </div>
                         </button>
@@ -244,7 +248,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 }}
                                 className="w-full btn-primary mb-2"
                             >
-                                Invite Partner 💌
+                                Invite Partner
                             </button>
                         )}
                         <button
@@ -273,7 +277,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     setInviteLink('');
                     setInviteEmail('');
                 }}
-                title="Invite Your Partner 💕"
+                title="Invite Your Partner"
             >
                 {inviteLink ? (
                     <div className="space-y-4">
@@ -326,7 +330,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 Cancel
                             </Button>
                             <Button type="submit" loading={sendingInvite} className="flex-1">
-                                Send Invite 💌
+                                Send Invite
                             </Button>
                         </div>
                     </form>

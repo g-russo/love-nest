@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, Button, Modal, EmptyState, LoadingSpinner } from '@/components/ui';
-import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, Bell, Trash2, Edit2, X } from 'lucide-react';
+import { Calendar as CalendarIcon, Plus, ChevronLeft, ChevronRight, Clock, MapPin, Bell, Trash2, Edit2, X, Heart, Cake, PartyPopper, Star } from 'lucide-react';
 import { api } from '@/lib/api';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -60,11 +60,11 @@ export default function CalendarPage() {
         custom: 'bg-violet-500',
     };
 
-    const eventTypeEmojis: Record<string, string> = {
-        date: '❤️',
-        birthday: '🎂',
-        anniversary: '💕',
-        custom: '⭐',
+    const eventTypeIcons: Record<string, any> = {
+        date: Heart,
+        birthday: Cake,
+        anniversary: PartyPopper,
+        custom: Star,
     };
 
     const handleDeleteEvent = async (id: string) => {
@@ -84,7 +84,7 @@ export default function CalendarPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-gray-800">Calendar 📅</h1>
+                    <h1 className="font-serif text-3xl font-bold text-gray-800">Calendar</h1>
                     <p className="text-gray-500">Plan your dates and special moments</p>
                 </div>
                 <Button onClick={() => {
@@ -143,23 +143,26 @@ export default function CalendarPage() {
                                     key={day.toISOString()}
                                     onClick={() => setSelectedDate(day)}
                                     className={`aspect-square p-1 rounded-lg transition-all relative ${isToday(day)
-                                            ? 'bg-gradient-to-br from-rose-500 to-purple-500 text-white'
-                                            : isSelected
-                                                ? 'bg-rose-100 text-rose-600'
-                                                : 'hover:bg-rose-50'
+                                        ? 'bg-gradient-to-br from-rose-500 to-purple-500 text-white'
+                                        : isSelected
+                                            ? 'bg-rose-100 text-rose-600'
+                                            : 'hover:bg-rose-50'
                                         }`}
                                 >
                                     <span className={`text-sm ${isToday(day) ? 'font-bold' : ''}`}>
                                         {format(day, 'd')}
                                     </span>
                                     {dayEvents.length > 0 && (
-                                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
-                                            {dayEvents.slice(0, 3).map((event, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={`w-1.5 h-1.5 rounded-full ${eventTypeColors[event.eventType] || 'bg-rose-500'}`}
-                                                />
-                                            ))}
+                                        <div className="absolute inset-x-0 bottom-1 flex justify-center gap-0.5 px-0.5 overflow-hidden">
+                                            {dayEvents.slice(0, 3).map((event, i) => {
+                                                const Icon = eventTypeIcons[event.eventType] || Star;
+                                                return (
+                                                    <Icon
+                                                        key={i}
+                                                        className={`w-3 h-3 ${eventTypeColors[event.eventType].replace('bg-', 'text-')}`}
+                                                    />
+                                                );
+                                            })}
                                         </div>
                                     )}
                                 </button>
@@ -169,9 +172,9 @@ export default function CalendarPage() {
 
                     {/* Legend */}
                     <div className="flex flex-wrap gap-4 mt-6 pt-4 border-t border-rose-100">
-                        {Object.entries(eventTypeEmojis).map(([type, emoji]) => (
+                        {Object.entries(eventTypeIcons).map(([type, Icon]) => (
                             <div key={type} className="flex items-center gap-2 text-sm text-gray-600">
-                                <span>{emoji}</span>
+                                <Icon className={`w-4 h-4 ${eventTypeColors[type].replace('bg-', 'text-')}`} />
                                 <span className="capitalize">{type}</span>
                             </div>
                         ))}
@@ -195,7 +198,10 @@ export default function CalendarPage() {
                                         >
                                             <div className="flex items-start justify-between mb-2">
                                                 <div className="flex items-center gap-2">
-                                                    <span>{eventTypeEmojis[event.eventType]}</span>
+                                                    {(() => {
+                                                        const Icon = eventTypeIcons[event.eventType] || Star;
+                                                        return <Icon className={`w-5 h-5 ${eventTypeColors[event.eventType].replace('bg-', 'text-')}`} />;
+                                                    })()}
                                                     <h4 className="font-semibold text-gray-800">{event.title}</h4>
                                                 </div>
                                                 <div className="flex gap-1">

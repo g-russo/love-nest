@@ -64,7 +64,10 @@ export default function MemoriesPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-gray-800">Memories 📸</h1>
+                    <h1 className="font-serif text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <Camera className="w-8 h-8 text-rose-500" />
+                        Memories
+                    </h1>
                     <p className="text-gray-500">Your shared photo album & video gallery</p>
                 </div>
                 <Button onClick={() => setUploadModalOpen(true)}>
@@ -80,11 +83,15 @@ export default function MemoriesPage() {
                         key={f}
                         onClick={() => setFilter(f)}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === f
-                                ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
-                                : 'bg-white text-gray-600 hover:bg-rose-50'
+                            ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
+                            : 'bg-white text-gray-600 hover:bg-rose-50'
                             }`}
                     >
-                        {f === 'all' ? 'All' : f === 'image' ? '📷 Photos' : '🎬 Videos'}
+                        {f === 'all' ? 'All' : f === 'image' ? (
+                            <span className="flex items-center gap-2"><Image className="w-4 h-4" /> Photos</span>
+                        ) : (
+                            <span className="flex items-center gap-2"><Video className="w-4 h-4" /> Videos</span>
+                        )}
                     </button>
                 ))}
             </div>
@@ -96,7 +103,7 @@ export default function MemoriesPage() {
                 </div>
             ) : filteredMemories.length === 0 ? (
                 <EmptyState
-                    icon="📷"
+                    icon={<Image className="w-12 h-12 text-gray-400" />}
                     title="No memories yet"
                     description="Start capturing your special moments together!"
                     action={
@@ -216,7 +223,7 @@ function UploadModal({ isOpen, onClose, onSuccess }: {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Add Memory 📸" size="lg">
+        <Modal isOpen={isOpen} onClose={onClose} title="Add Memory" size="lg">
             <form onSubmit={handleUpload} className="space-y-4">
                 {/* File Upload Area */}
                 <div

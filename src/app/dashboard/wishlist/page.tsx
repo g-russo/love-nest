@@ -41,8 +41,8 @@ export default function WishlistPage() {
                 api.getMyWishlist(),
                 partner ? api.getPartnerWishlist() : Promise.resolve({ items: [] }),
             ]);
-            setMyItems(myData.items || []);
-            setPartnerItems(partnerData.items || []);
+            setMyItems(myData.wishlist || []);
+            setPartnerItems(partnerData.wishlist || []);
         } catch (error) {
             console.error('Error fetching wishlists:', error);
         } finally {
@@ -156,7 +156,9 @@ export default function WishlistPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-gray-800">Wishlist 🎁</h1>
+                    <h1 className="font-serif text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <Gift className="w-8 h-8 text-rose-500" />
+                    </h1>
                     <p className="text-gray-500">Share what would make you happy</p>
                 </div>
                 <Button onClick={() => {
@@ -174,8 +176,8 @@ export default function WishlistPage() {
                     <button
                         onClick={() => setActiveTab('mine')}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'mine'
-                                ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
-                                : 'bg-white text-gray-600 hover:bg-rose-50'
+                            ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
+                            : 'bg-white text-gray-600 hover:bg-rose-50'
                             }`}
                     >
                         My Wishlist
@@ -183,8 +185,8 @@ export default function WishlistPage() {
                     <button
                         onClick={() => setActiveTab('partner')}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'partner'
-                                ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
-                                : 'bg-white text-gray-600 hover:bg-rose-50'
+                            ? 'bg-gradient-to-r from-rose-500 to-purple-500 text-white'
+                            : 'bg-white text-gray-600 hover:bg-rose-50'
                             }`}
                     >
                         {partner.nickname || partner.displayName}'s Wishlist
@@ -202,7 +204,7 @@ export default function WishlistPage() {
                     renderItems(myItems, true)
                 ) : (
                     <EmptyState
-                        icon="🎁"
+                        icon={<Gift className="w-12 h-12 text-gray-400" />}
                         title="Your wishlist is empty"
                         description="Add items you'd love to receive!"
                         action={
@@ -217,7 +219,7 @@ export default function WishlistPage() {
                 renderItems(partnerItems, false)
             ) : (
                 <EmptyState
-                    icon="💝"
+                    icon={<Heart className="w-12 h-12 text-rose-400" />}
                     title={`${partner?.displayName}'s wishlist is empty`}
                     description="Check back later for gift ideas!"
                 />
@@ -297,7 +299,7 @@ function WishlistModal({ isOpen, onClose, onSuccess, item }: {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={item ? 'Edit Wish' : 'Add to Wishlist 🎁'}>
+        <Modal isOpen={isOpen} onClose={onClose} title={item ? 'Edit Wish' : 'Add to Wishlist'}>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">What do you want? *</label>

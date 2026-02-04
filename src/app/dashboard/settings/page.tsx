@@ -56,7 +56,7 @@ export default function SettingsPage() {
                 birthday: profileData.birthday || undefined,
             });
             await refreshUser();
-            toast.success('Profile updated! 💕');
+            toast.success('Profile updated!');
         } catch (error: any) {
             toast.error(error.message || 'Failed to update');
         } finally {
@@ -76,7 +76,7 @@ export default function SettingsPage() {
                 partner2Nickname: coupleData.partner2Nickname || undefined,
             });
             await refreshUser();
-            toast.success('Couple settings updated! 💕');
+            toast.success('Couple settings updated!');
         } catch (error: any) {
             toast.error(error.message || 'Failed to update');
         } finally {
@@ -88,7 +88,10 @@ export default function SettingsPage() {
         <div className="space-y-6 max-w-2xl">
             {/* Header */}
             <div>
-                <h1 className="font-serif text-3xl font-bold text-gray-800">Settings ⚙️</h1>
+                <h1 className="font-serif text-3xl font-bold text-gray-800 flex items-center gap-3">
+                    <User className="w-8 h-8 text-rose-500" />
+                    Settings
+                </h1>
                 <p className="text-gray-500">Customize your Love Nest</p>
             </div>
 
@@ -202,9 +205,15 @@ export default function SettingsPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Your pet name</label>
                                 <input
                                     type="text"
-                                    value={coupleData.partner1Nickname}
-                                    onChange={(e) => setCoupleData({ ...coupleData, partner1Nickname: e.target.value })}
-                                    placeholder="Babe, Honey..."
+                                    value={(typeof user?.coupleId?.partner1 === 'string' ? user.coupleId.partner1 === user._id : user?.coupleId?.partner1?._id === user?._id) ? coupleData.partner1Nickname : coupleData.partner2Nickname}
+                                    onChange={(e) => {
+                                        const isP1 = typeof user?.coupleId?.partner1 === 'string' ? user.coupleId.partner1 === user?._id : user?.coupleId?.partner1?._id === user?._id;
+                                        setCoupleData({
+                                            ...coupleData,
+                                            [isP1 ? 'partner1Nickname' : 'partner2Nickname']: e.target.value
+                                        });
+                                    }}
+                                    placeholder="What does your partner call you?"
                                     className="input-romantic"
                                 />
                             </div>
@@ -212,9 +221,15 @@ export default function SettingsPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">{partner.displayName}'s pet name</label>
                                 <input
                                     type="text"
-                                    value={coupleData.partner2Nickname}
-                                    onChange={(e) => setCoupleData({ ...coupleData, partner2Nickname: e.target.value })}
-                                    placeholder="Sweetheart, Love..."
+                                    value={(typeof user?.coupleId?.partner1 === 'string' ? user.coupleId.partner1 === user._id : user?.coupleId?.partner1?._id === user?._id) ? coupleData.partner2Nickname : coupleData.partner1Nickname}
+                                    onChange={(e) => {
+                                        const isP1 = typeof user?.coupleId?.partner1 === 'string' ? user.coupleId.partner1 === user?._id : user?.coupleId?.partner1?._id === user?._id;
+                                        setCoupleData({
+                                            ...coupleData,
+                                            [isP1 ? 'partner2Nickname' : 'partner1Nickname']: e.target.value
+                                        });
+                                    }}
+                                    placeholder={`What do you call ${partner.displayName}?`}
                                     className="input-romantic"
                                 />
                             </div>
@@ -231,7 +246,10 @@ export default function SettingsPage() {
             {/* Partner Info */}
             {partner && (
                 <Card className="p-6 bg-gradient-to-r from-rose-50 to-purple-50">
-                    <h3 className="font-serif text-lg font-semibold text-gray-800 mb-4">Your Partner 💕</h3>
+                    <h3 className="font-serif text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <Heart className="w-5 h-5 text-rose-500" />
+                        Your Partner
+                    </h3>
                     <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rose-400 to-purple-400 flex items-center justify-center text-white text-2xl font-semibold">
                             {partner.displayName.charAt(0)}
