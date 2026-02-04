@@ -139,7 +139,11 @@ class ApiClient {
 
     // Memories
     async getMemories(params?: { page?: number; limit?: number; type?: string }) {
-        const query = new URLSearchParams(params as any).toString();
+        // Filter out undefined values to prevent "undefined" being sent as a string
+        const cleanParams = params ? Object.fromEntries(
+            Object.entries(params).filter(([_, v]) => v !== undefined)
+        ) : {};
+        const query = new URLSearchParams(cleanParams as any).toString();
         return this.request(`/memories${query ? `?${query}` : ''}`);
     }
 
