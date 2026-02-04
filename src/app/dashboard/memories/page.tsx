@@ -60,10 +60,6 @@ export default function MemoriesPage() {
         }
     };
 
-    const filteredMemories = memories.filter(m =>
-        filter === 'all' || m.type === filter
-    );
-
     const handleMediaError = (memoryId: string) => {
         setMediaErrors(prev => new Set(prev).add(memoryId));
     };
@@ -129,7 +125,7 @@ export default function MemoriesPage() {
                 <div className="py-20">
                     <LoadingSpinner />
                 </div>
-            ) : filteredMemories.length === 0 ? (
+            ) : memories.length === 0 ? (
                 <EmptyState
                     icon={<Image className="w-12 h-12 text-gray-400" />}
                     title="No memories yet"
@@ -143,7 +139,7 @@ export default function MemoriesPage() {
                 />
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {filteredMemories.map((memory, index) => (
+                    {memories.map((memory, index) => (
                         <div
                             key={memory._id}
                             className="polaroid cursor-pointer"
@@ -201,7 +197,7 @@ export default function MemoriesPage() {
             )}
 
             {/* Load More Button */}
-            {!loading && filteredMemories.length > 0 && pagination.page < pagination.pages && (
+            {!loading && memories.length > 0 && pagination.page < pagination.pages && (
                 <div className="flex justify-center py-8">
                     <Button 
                         onClick={handleLoadMore} 
